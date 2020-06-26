@@ -4,79 +4,79 @@
 #include "Utilities.h"
 
 //AddLists:
-template<typename, typename...>
-struct AddLists {};
+// template<typename, typename...>
+// struct AddLists {};
 
 template<typename L1, typename L2>
-struct AddLists<L1, L2>{
-    typedef typename PrependLists<Int<L1::head::value + L2::head::value>, AddLists<L1::next, L2::next>::result> result;
+struct AddLists {
+    typedef typename PrependList<Int<(L1::head::value) + (L2::head::value)>, typename AddLists<typename L1::next, typename L2::next>::result>::list result;
     // TODO: Check if the matrix values type is promised to be Int or nah
 };
 
-template<>
-struct AddLists<List<>, List<>> {
-    typedef List<> result;
+template<typename L1, typename L2>
+struct AddLists<List<L1>, List<L2>> {
+    typedef List<Int<(List<L1>::head::value) + (List<L2>::head::value)>> result;
 };
 
 //ScalarMultiply:
-template<typename, typename...>
-struct ScalarMultiply {};
+// template<typename, typename>
+// struct ScalarMultiply {};
 
 template<typename L1, typename L2>
-struct ScalarMultiply<L1, L2>{
-    typedef typename Int<L1::head::value * L2::head::value) + (ScalarMultiply<L1::next, L2::next>::result::value)> result;
+struct ScalarMultiply {
+    typedef Int<((L1::head::value) * (L2::head::value)) + (ScalarMultiply<typename L1::next, typename L2::next>::result::value)> result;
 };
 
-template<>
-struct ScalarMultiply<List<>, List<>>{
-    typedef Int<0> result;
+template<typename L1, typename L2>
+struct ScalarMultiply<List<L1>, List<L2>>{
+    typedef Int<(List<L1>::head::value) * (List<L2>::head::value)> result;
 };
 
-template<typename, typename>
-struct VecMatMultiply {};
+// template<typename, typename>
+// struct VecMatMultiply {};
 
-template<typename V, typaname M>
-struct VecMatMultiply<V, M> {
-    typedef typename PrependList<ScalarMultiply<V, M::head>, VecMatMultiply<V, M::next>::result> result;
-}
+template<typename V, typename M>
+struct VecMatMultiply {
+    typedef typename PrependList<typename ScalarMultiply<V, typename M::head>::result, typename VecMatMultiply<V, typename M::next>::result>::list result;
+};
 
-template<typename V>
-struct VecMatMultiply<V, List<>> {
-    typedef List<> result;
-}
+template<typename V, typename M>
+struct VecMatMultiply<V, List<M>> {
+    typedef List<typename ScalarMultiply<V, typename List<M>::head>::result> result;
+};
 
 
 //Add:
-template<typename, typename...>
-struct Add {};
+// template<typename, typename...>
+// struct Add {};
 
 template<typename M1, typename M2>
-struct Add<M1, M2> { //TODO: check if we need to assert validity of the input!
+struct Add { //TODO: check if we need to assert validity of the input!
     static_assert(M1::size == M2::size, "Matrix addition is not defined, rows are unequal");
     static_assert(M1::head::size == M2::head::size, "Matrix addition is not defined, columns are unequal");
-    typedef typename PrependList<AddLists<M1::head, M2::head>::result, Add<M1::next, M2::next>::result> result;
+    typedef typename PrependList<typename AddLists<typename M1::head, typename M2::head>::result, typename Add<typename M1::next, typename M2::next>::result>::list result;
 };
 
-template<>
-struct Add<List<>, List<>> {
-    typedef List<> result;
+template<typename M1, typename M2>
+struct Add<List<M1>, List<M2>> {
+    typedef List<typename AddLists<typename List<M1>::head,typename List<M2>::head>::result> result;
 };
 
 //Multiply:
-template<typename, typename>
-struct Multiply {};
+// template<typename, typename>
+// struct Multiply {};
 
 template<typename M1, typename M2>
-struct Multiply<M1, M2> {
+struct Multiply {
     static_assert(M1::head::size == M2::size, "Matrix Multiplication is not defined for these matrices");
     //call some auxilary function
-    typename typedef PrependList<VecMatMultiply<M1::head, M2>::result, Multiply<M1::next, M2>::result> result;
-}
+    typedef typename PrependList<typename VecMatMultiply<typename M1::head, M2>::result, typename Multiply<typename M1::next, M2>::result>::list result;
+};
 
-template<M>
-struct Multiplt<List<>, M2> {
-    typename List<> result;
-}
+template<typename M1, typename M2>
+struct Multiply<List<M1>, M2> {
+    typedef List<typename VecMatMultiply<typename List<M1>::head, M2>::result> result;
+};
 
 
 #endif

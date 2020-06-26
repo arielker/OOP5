@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/Ariel/OOP5/part1/MatrixOperations.h
+Utilities.h
+C:/Users/Ariel/OOP5/part1/Utilities.h
+
+C:/Users/Ariel/OOP5/part1/Part1Examples.cpp
+iostream
+-
+MatrixOperations.h
+C:/Users/Ariel/OOP5/part1/MatrixOperations.h
+
+C:/Users/Ariel/OOP5/part1/Utilities.h
+
