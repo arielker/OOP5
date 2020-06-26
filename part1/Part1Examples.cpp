@@ -1,4 +1,4 @@
-/*#include <iostream>
+#include <iostream>
 #include "MatrixOperations.h"
 
 int main() {
@@ -50,7 +50,18 @@ int main() {
 																    //			List< Int<8>, Int<0> >
 																    //		  >
 																 
-	static_assert(matrix32::head::head::value == 16, "Failed");														 
+	static_assert(matrix32::head::head::value == 16, "Failed");			
+
+	typedef List<
+				List< Int<80>, Int<7>, Int<3> >,
+				List< Int<8>, Int<0>, Int<-5> >
+			> matrix23;
+
+	typedef typename Multiply<matrix12, matrix23>::result matrix13; // = List<
+																	//			List< Int<96>, Int<7>, Int<-7>,
+																	//			List< Int<8>, Int<0>, I
+																	//											 
+	static_assert(matrix13::head::head::value == 96, "Failed");		
 
 	std::cout << "Passed" << std::endl;
-}*/
+}

@@ -3,10 +3,10 @@
 
 #define check 2
 
-template <int N>
+/*template <int N>
 struct Int {
 	constexpr static int val = N;
-};
+};*/
 
 using namespace std;
 
@@ -107,7 +107,7 @@ void testSet() {
 }
 
 void veryHardTest() {
-	static_assert(1 == check, "If you failed this test, you should think of rewriting your program again..."); 
+	//static_assert(1 == check, "If you failed this test, you should think of rewriting your program again..."); 
 	// Just kidding, erase this assert
 }
 
@@ -121,5 +121,6 @@ int main() {
 	testPrependList();
 	testGet();
 	testSet();
-	
+	cout << "you are the best and you know English, as oposed to me" << endl;
+	return 0;
 }
