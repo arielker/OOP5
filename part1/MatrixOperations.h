@@ -2,6 +2,7 @@
 #define _MATRIX_OPERATIONS_H
 
 #include "Utilities.h"
+#include "Transpose.h"
 
 //AddLists:
 // template<typename, typename...>
@@ -70,12 +71,12 @@ template<typename M1, typename M2>
 struct Multiply {
     static_assert(M1::head::size == M2::size, "Matrix Multiplication is not defined for these matrices");
     //call some auxilary function
-    typedef typename PrependList<typename VecMatMultiply<typename M1::head, M2>::result, typename Multiply<typename M1::next, M2>::result>::list result;
+    typedef typename PrependList<typename VecMatMultiply<typename M1::head, typename Transpose<M2>::matrix>::result, typename Multiply<typename M1::next, M2>::result>::list result;
 };
 
 template<typename M1, typename M2>
 struct Multiply<List<M1>, M2> {
-    typedef List<typename VecMatMultiply<typename List<M1>::head, M2>::result> result;
+    typedef List<typename VecMatMultiply<typename List<M1>::head, typename Transpose<M2>::matrix>::result> result;
 };
 
 

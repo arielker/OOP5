@@ -3,5 +3,6 @@
 
 CMakeFiles/OOP5.dir/part1/Part1Examples.cpp.obj: ../part1/MatrixOperations.h
 CMakeFiles/OOP5.dir/part1/Part1Examples.cpp.obj: ../part1/Part1Examples.cpp
+CMakeFiles/OOP5.dir/part1/Part1Examples.cpp.obj: ../part1/Transpose.h
 CMakeFiles/OOP5.dir/part1/Part1Examples.cpp.obj: ../part1/Utilities.h
 
