@@ -59,8 +59,8 @@ int main() {
 
 	typedef typename Multiply<matrix12, matrix23>::result matrix13; // = List<
 																	//			List< Int<96>, Int<7>, Int<-7>,
-																	//			List< Int<8>, Int<0>, I
-																	//											 
+																	//			List< Int<8>, Int<0>, Int<-5>
+																	//			>	 
 	static_assert(matrix13::head::head::value == 96, "Failed");		
 
 	std::cout << "Passed" << std::endl;
