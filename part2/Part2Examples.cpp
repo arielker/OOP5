@@ -29,7 +29,7 @@ bool compareValues(std::vector<T*> vPointer, std::vector<T> v) {
 }
 
 int main() {
-    int array[10] = { 1, 2, 3, 2, 4, 6, 5, 7, 8, 9 };
+    int array[10] = { 1, 2, 2, 3, 4, 6, 5, 7, 8, 9 };
     std::vector<int*> vector;
     for(int i = 0 ; i < 10 ; i++) vector.push_back(array + i);
 

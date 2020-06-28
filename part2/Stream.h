@@ -3,10 +3,8 @@
 
 #include <functional>
 #include <algorithm>
-//#include <set>
 #include <map>
 #include <vector>
-//#include <list>
 #include <numeric>
 
 using namespace std;
@@ -19,20 +17,19 @@ public:
     explicit Stream(function<vector<T*>()> f) : func(f) {};
 
 private:
-    template </*template<typename U> class*/ typename Tcontainer>
-    explicit Stream(Tcontainer/*<T*>*/& container){
+    template <typename Tcontainer>
+    explicit Stream(Tcontainer& container){
         func = [container]() -> vector<T*> {
-            vector<T*> ret_vec;
-            copy<Tcontainer/*<T*>*/, vector<T*>>(container.begin(), container.end(), ret_vec.begin());
+            vector<T*> ret_vec(container.size());
+            copy(container.begin(), container.end(), ret_vec.begin());
             return ret_vec;
         };
     }
 
 public:
-
     //TODO: implement of specialization that receives map function!
-    template </*template<typename U> class*/ typename Tcontainer>
-    static Stream<T> of(Tcontainer/*<T*>*/& tcontainer){
+    template <typename Tcontainer>
+    static Stream<T> of(Tcontainer& tcontainer){
         return Stream(tcontainer);
     }
 
@@ -41,8 +38,9 @@ public:
     Stream<T> filter(function<bool(const T*)> pred){
         auto f1 = this->func;
         this->func = [f1, pred]() -> vector<T*> {
-            vector<T*> tmp_vec1 = f1(), tmp_vec2;
-            copy_if(tmp_vec1.begin(), tmp_vec1.end(), tmp_vec2.begin(), pred);
+            vector<T*> tmp_vec1 = f1(), tmp_vec2(tmp_vec1.size());
+            auto it = copy_if(tmp_vec1.begin(), tmp_vec1.end(), tmp_vec2.begin(), pred);
+            tmp_vec2.resize(it - tmp_vec2.begin());
             return tmp_vec2;
         };
         return *this;
@@ -51,23 +49,21 @@ public:
     template <typename K>
     Stream<K> map(function<K*(const T*)> map_func){
         auto f1 = this->func;
-        auto f2 = [f1, map_func]() -> vector<K*> {
+        function<vector<K*>()> f2 = [f1, map_func]() -> vector<K*> {
             vector<T*> tmp_vec1 = f1();
-            vector<K*> tmp_vec2;
+            vector<K*> tmp_vec2(tmp_vec1.size());
             transform(tmp_vec1.begin(), tmp_vec1.end(), tmp_vec2.begin(), map_func);
             return tmp_vec2;
         };
         return Stream<K>(f2);
-        //TODO: check if works! cuz Stream<K> is a different class and its c'tor is private
     }
 
-    /*TODO: make sure cpp power is real, solid, strong, stunning and brave! So stunningly brave...
-     * jk... make sure T::operator== works*/
     Stream<T> distinct(function<bool(const T*, const T*)> comp_func){
         auto f1 = this->func;
         this->func = [f1, comp_func]() -> vector<T*> {
             vector<T*> tmp_vec1 = f1();
-            unique(tmp_vec1.begin(), tmp_vec1.end(), comp_func);
+            auto it = unique(tmp_vec1.begin(), tmp_vec1.end(), comp_func);
+            tmp_vec1.resize(it - tmp_vec1.begin());
             return tmp_vec1;
         };
         return *this;
@@ -77,14 +73,13 @@ public:
         auto f1 = this->func;
         this->func = [f1]() -> vector<T*> {
             vector<T*> tmp_vec1 = f1();
-            unique(tmp_vec1.begin(), tmp_vec1.end());
+            auto it = unique(tmp_vec1.begin(), tmp_vec1.end(), [](const T* a, const T* b) -> bool {return *a == * b;});
+            tmp_vec1.resize(it - tmp_vec1.begin());
             return tmp_vec1;
         };
         return *this;
     }
 
-    /*TODO: make sure cpp power is real, solid, strong, stunning and brave! So stunningly brave...
-     * jk... make sure T::operator< works*/
     Stream<T> sorted(function<bool(const T*, const T*)> comp_func){
         auto f1 = this->func;
         this->func = [f1, comp_func]() -> vector<T*>{
@@ -99,16 +94,16 @@ public:
         auto f1 = this->func;
         this->func = [f1]() -> vector<T*>{
             vector<T*> tmp_vec1 = f1();
-            sort(tmp_vec1.begin(), tmp_vec1.end());
+            sort(tmp_vec1.begin(), tmp_vec1.end(), [](const T* a, const T* b) -> bool {return *a < *b;});
             return tmp_vec1;
         };
         return *this;
     }
 
-    template </*template<typename U> class*/ typename Tcontainer>
-    Tcontainer/*<T*>*/ collect(){
-        Tcontainer/*<T*>*/ tcontainer;
+    template <typename Tcontainer>
+    Tcontainer collect(){
         auto vec = this->func();
+        Tcontainer tcontainer(vec.size());
         copy(vec.begin(), vec.end(), tcontainer.begin());
         return tcontainer;
     }
@@ -121,12 +116,6 @@ public:
     T* reduce(T* starter, function<T*(const T*, const T*)> f){
         auto vec = this->func();
         return accumulate(vec.begin(), vec.end(), starter, f);
-        //TODO: check if it works cuz last param of accumulate is a binary op. (wtf is that?!)
-        /*T* ender; *ender = *starter;
-        for(auto &t : vec){
-            ender = f(ender, t);
-        }
-        return ender;*/
     }
 
     T* min(){
