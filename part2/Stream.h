@@ -17,6 +17,17 @@ public:
     explicit Stream(function<vector<T*>()> f) : func(f) {};
 
 private:
+    template <typename K>
+    explicit Stream(map<K,T>& container){
+        func = [container](){
+            vector<T*> ret_vec(container.size());
+            for (auto i = container.begin(); i != container.end() ; i++) {
+                ret_vec.push_back(i->second);
+            }
+            return ret_vec;
+        };
+    }
+
     template <typename Tcontainer>
     explicit Stream(Tcontainer& container){
         func = [container]() -> vector<T*> {
@@ -27,7 +38,12 @@ private:
     }
 
 public:
-    //TODO: implement of specialization that receives map function!
+    //specialization for map container:
+    template <typename K>
+    static Stream<T> of(map<K, T*>& container){
+        return Stream(container);
+    }
+
     template <typename Tcontainer>
     static Stream<T> of(Tcontainer& tcontainer){
         return Stream(tcontainer);
@@ -120,12 +136,12 @@ public:
 
     T* min(){
         auto vec = this->func();
-        return &(*(min_element(vec.begin(), vec.end())));
+        return *(min_element(vec.begin(), vec.end()));
     }
 
     T* max(){
         auto vec = this->func();
-        return &(*(max_element(vec.begin(), vec.end())));
+        return *(max_element(vec.begin(), vec.end()));
     }
 
     int count(){
@@ -144,7 +160,7 @@ public:
 
     T* findFirst(function<bool(const T*)> function){
         auto vec = this->func();
-        return find_if(vec.begin(), vec.end(), function);
+        return *(find_if(vec.begin(), vec.end(), function));
     }
 };
 

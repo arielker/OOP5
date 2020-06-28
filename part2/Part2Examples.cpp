@@ -33,6 +33,29 @@ int main() {
     std::vector<int*> vector;
     for(int i = 0 ; i < 10 ; i++) vector.push_back(array + i);
 
+    assert(*Stream<int>::of(vector).min() == 1);
+    assert(*Stream<int>::of(vector).max() == 9);
+
+    Stream<int>::of(vector).forEach([](int* a){cout << *a << endl;});
+
+    assert(Stream<int>::of(vector).anyMatch(
+            [](const int *a) { return *a == 8; }));
+    assert(!Stream<int>::of(vector).anyMatch(
+            [](const int *a) { return *a == 10; }));
+    assert(!Stream<int>::of(vector).allMatch(
+            [](const int *a) { return *a == 8; }));
+    assert(Stream<int>::of(vector).allMatch(
+            [](const int *a) { return *a > 0; }));
+
+    assert(*Stream<int>::of(vector).findFirst(
+            [](const int *a) { return *a > 5; }) == 6);
+    assert(Stream<int>::of(vector).findFirst(
+            [](const int *a) { return *a > 15; }) == nullptr);
+    assert(Stream<int>::of(vector).findFirst(
+            [](const int *a) { return *a < -5; }) == nullptr);
+    assert(*Stream<int>::of(vector).findFirst(
+            [](const int *a) { return *a > 4; }) = 6);
+
     assert(Stream<int>::of(vector).filter([](const int* val) { return *val != 2; } ).count() == 8);
     assert(Stream<int>::of(vector).distinct().count() == 9);
 
@@ -40,7 +63,6 @@ int main() {
     assert(compareValues(Stream<int>::of(vector).distinct().sorted().collect<std::vector<int*>>(), other));
 
     assert(Stream<int>::of(vector).map<Cell<int>>([](const int* a) { return new Cell<int>(*a); }).distinct().count() == 9);
-
     int initial = 0;
     assert(*Stream<int>::of(vector).reduce(&initial, [](const int* a, const int* b) { auto * c = new int; *c = *a + *b; return c; }) == 47);
 
