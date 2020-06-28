@@ -89,7 +89,7 @@ public:
         auto f1 = this->func;
         this->func = [f1]() -> vector<T*> {
             vector<T*> tmp_vec1 = f1();
-            auto it = unique(tmp_vec1.begin(), tmp_vec1.end(), [](const T* a, const T* b) -> bool {return *a == * b;});
+            auto it = unique(tmp_vec1.begin(), tmp_vec1.end(), [](const T* a, const T* b) -> bool {return *a == *b;});
             tmp_vec1.resize(it - tmp_vec1.begin());
             return tmp_vec1;
         };
