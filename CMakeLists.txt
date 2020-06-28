@@ -7,4 +7,4 @@ set(OOP_FLAGS_RELEASE "${OOP_FLAGS_DEBUG} -DNDEBUG")
 
 set(CMAKE_C_FLAGS ${OOP_FLAGS_DEBUG})
 
-add_executable(OOP5 part1/Part1Examples.cpp)
+add_executable(OOP5 part2/Part2Examples.cpp)
