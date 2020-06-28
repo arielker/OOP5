@@ -30,7 +30,7 @@ private:
 
 public:
 
-    //TODO: implement of specialization that recieves map function!
+    //TODO: implement of specialization that receives map function!
     template </*template<typename U> class*/ typename Tcontainer>
     static Stream<T> of(Tcontainer/*<T*>*/& tcontainer){
         return Stream(tcontainer);
