@@ -18,7 +18,7 @@ public:
 
 private:
     template <typename K>
-    explicit Stream(map<K,T>& container){
+    explicit Stream<T>(map<K,T*>& container){
         func = [container](){
             vector<T*> ret_vec(container.size());
             for (auto i = container.begin(); i != container.end() ; i++) {
@@ -29,7 +29,7 @@ private:
     }
 
     template <typename Tcontainer>
-    explicit Stream(Tcontainer& container){
+    explicit Stream<T>(Tcontainer& container){
         func = [container]() -> vector<T*> {
             vector<T*> ret_vec(container.size());
             copy(container.begin(), container.end(), ret_vec.begin());
