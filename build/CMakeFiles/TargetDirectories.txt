@@ -1,3 +1,0 @@
-C:/Users/Ariel/OOP5/build/CMakeFiles/OOP5.dir
-C:/Users/Ariel/OOP5/build/CMakeFiles/edit_cache.dir
-C:/Users/Ariel/OOP5/build/CMakeFiles/rebuild_cache.dir
